@@ -1,0 +1,78 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+	body{
+		margin: 0;
+		padding: 0;
+	}
+	#input-container{
+		display: flex;
+	}
+	#biggest-number{
+		margin: 4px;
+		flex-grow: 1;
+	}
+	#container > div{
+		padding: 2px;
+		transition: 0.8s;
+	}
+</style>
+<title>Sieve of Eratosthenes</title>
+
+<div id="input-container"><input type="number" id="biggest-number" title="biggest number"></div>
+<div id="container"></div>
+
+<script>
+	window.time = 2000;
+
+	const timeout = time => new Promise(resolve => {
+		if(isFinite(time)){
+			return setTimeout(resolve, time);
+		}
+	});
+
+	const container = document.getElementById('container');
+	const biggestNumberInput = document.getElementById('biggest-number');
+
+	biggestNumberInput.addEventListener('input', async () => {
+		// getting & validating input
+		const to = Math.floor(Number(biggestNumberInput.value));
+		if(!isFinite(to) || to >= 100000 || to < 2) return;
+
+		// creating the elements of numbers
+		const ns = new Array(to - 1).fill().map((_,i) => i + 2);
+		const fragment = document.createDocumentFragment();
+		const els = new Map(
+			ns.map(n => {
+				const el = document.createElement('div');
+				el.appendChild(document.createTextNode(n));
+				fragment.appendChild(el);
+				return [n, el];
+			})
+		);
+
+		// placing the elements into the container
+		while(container.firstChild){
+			container.removeChild(container.firstChild);
+		}
+		container.appendChild(fragment);
+
+		// doing the things
+		const notPrimes = new Set();
+		for(const n of ns){
+			if(!notPrimes.has(n)){
+				const reddedEls = [];
+				els.get(n).style.backgroundColor = 'green';
+				await timeout(time);
+				for(let i = n * 2; i <= to; i += n){
+					reddedEls.push(els.get(i));
+					els.get(i).style.backgroundColor = 'red';
+					notPrimes.add(i);
+					await timeout(time);
+				}
+				reddedEls.forEach(reddedEl => {
+					reddedEl.style.backgroundColor = '#800';
+				});
+			}
+		}
+	});
+</script>
