@@ -22,7 +22,10 @@
 <div id="container"></div>
 
 <script>
-	window.time = 2000;
+	window.waitBeforeSelectingThePrime = 1000;
+	window.waitAfterSelectingThePrime = 1000;
+	window.waitAfterSelectingMultiple = 50;
+	window.waitBeforeDeselectingMultiples = 1000;
 
 	const timeout = time => new Promise(resolve => {
 		if(isFinite(time)){
@@ -61,17 +64,21 @@
 		for(const n of ns){
 			if(!notPrimes.has(n)){
 				const reddedEls = [];
+				await timeout(waitBeforeSelectingThePrime);
 				els.get(n).style.backgroundColor = 'green';
-				await timeout(time);
+				await timeout(waitAfterSelectingThePrime);
 				for(let i = n * 2; i <= to; i += n){
 					reddedEls.push(els.get(i));
 					els.get(i).style.backgroundColor = 'red';
 					notPrimes.add(i);
-					await timeout(time);
+					await timeout(waitAfterSelectingMultiple);
 				}
-				reddedEls.forEach(reddedEl => {
-					reddedEl.style.backgroundColor = '#800';
-				});
+				if(reddedEls.length > 0){
+					await timeout(waitBeforeDeselectingMultiples);
+					reddedEls.forEach(reddedEl => {
+						reddedEl.style.backgroundColor = '#800';
+					});
+				}
 			}
 		}
 	});
