@@ -9,9 +9,13 @@
 	}
 	#biggest-number{
 		margin: 4px;
+		height: 21px;
 		flex-grow: 1;
 	}
 	#container > div{
+		display: inline-block;
+		width: 40px;
+		height: 18px;
 		padding: 2px;
 		transition: 0.8s;
 	}
@@ -27,6 +31,16 @@
 	window.waitAfterSelectingMultiple = 50;
 	window.waitBeforeDeselectingMultiples = 1000;
 
+	/*
+	const countMaxOnPage = () => {
+		const x = Math.floor(window.innerWidth / 44);
+		const y = Math.floor((window.innerHeight - ) / 22);
+		const n = x * y;
+		console.log(n);
+	};
+	countMaxOnPage();
+	*/
+	
 	const timeout = time => new Promise(resolve => {
 		if(isFinite(time)){
 			return setTimeout(resolve, time);
